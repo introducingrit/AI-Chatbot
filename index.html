@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI chatbot</title>
+    
+    <!-- Highlight.js CSS for Code Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-night-dark.min.css">
+    
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: radial-gradient(circle at top left, #2a1a3a, #121212);
+        }
+
+        /* Landing Page Styles */
+        .landing-container {
+            text-align: center;
+            background-color: #1e1e2e;
+            padding: 50px 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            border: 3px solid #baffc9; /* Pastel green */
+            max-width: 600px;
+            width: 90%;
+            animation: fadeIn 1s ease-out;
+        }
+        .landing-container h1 {
+            color: #ffb3ba; /* Pastel pink */
+            font-size: 42px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(255, 179, 186, 0.3);
+        }
+        .landing-container p {
+            color: #bae1ff; /* Pastel blue */
+            font-size: 18px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        .start-btn {
+            background: linear-gradient(135deg, #ffdfba, #ffb3ba);
+            color: #121212;
+            border: none;
+            border-radius: 30px;
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 179, 186, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .start-btn:hover {
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 179, 186, 0.7);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Chat Interface Styles */
+        .chat-container {
+            background-color: #1e1e2e;
+            border-radius: 20px;
+            width: 95%;
+            max-width: 800px;
+            height: 85vh;
+            display: none; /* Hidden initially */
+            flex-direction: column;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            border: 3px solid #ffb3ba;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .header {
+            background: linear-gradient(135deg, #ffb3ba, #e8baff);
+            padding: 20px;
+            text-align: center;
+            color: #121212;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        .chat-box {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: #1e1e2e;
+            scroll-behavior: smooth;
+        }
+        .message {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            max-width: 85%;
+        }
+        .message.ai {
+            align-self: flex-start;
+        }
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        .avatar {
+            font-size: 28px;
+            background-color: #2a2a3e;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            flex-shrink: 0;
+        }
+        .bubble {
+            padding: 15px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            line-height: 1.5;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            word-wrap: break-word;
+            overflow-x: auto;
+        }
+        .message.ai .bubble {
+            background-color: #2a2a3e; 
+            color: #ffffff;
+            border: 1px solid #bae1ff;
+            border-bottom-left-radius: 2px;
+        }
+        .message.user .bubble {
+            background-color: #ffdfba;
+            color: #121212;
+            border-bottom-right-radius: 2px;
+        }
+        .bubble pre {
+            background-color: #1a1a24;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .bubble code {
+            font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+        }
+        .bubble p:first-child { margin-top: 0; }
+        .bubble p:last-child { margin-bottom: 0; }
+        
+        .input-area {
+            padding: 20px;
+            background-color: #2a2a3e;
+            border-top: 2px solid #baffc9;
+        }
+        .chat-form {
+            display: flex;
+            gap: 10px;
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            background-color: #121212;
+            color: #ffffba;
+            border: 2px solid #e8baff;
+            border-radius: 25px;
+            padding: 15px 20px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 186, 0.5);
+        }
+        input[type="text"]:focus {
+            box-shadow: 0 0 15px rgba(232, 186, 255, 0.5);
+            border-color: #ffffba;
+        }
+        .send-btn {
+            background: linear-gradient(135deg, #baffc9, #bae1ff);
+            color: #121212;
+            border: none;
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(186, 255, 201, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(186, 255, 201, 0.7);
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1e1e2e; }
+        ::-webkit-scrollbar-thumb { background: #e8baff; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- Landing Page View -->
+    <div class="landing-container" id="landingPage">
+        <h1>Welcome to AI Chatbot 🤖</h1>
+        <p>Your intelligent, responsive, and friendly virtual assistant. Ask questions, generate code, format markdown, and explore ideas effortlessly in a beautiful pastel environment.</p>
+        <button class="start-btn" onclick="startChat()">Start Chatting 🚀</button>
+    </div>
+
+    <!-- Main Chat View -->
+    <div class="chat-container" id="mainChat">
+        <div class="header">
+            AI chatbot
+        </div>
+        
+        <div class="chat-box" id="chatBox">
+            <div class="message ai">
+                <div class="avatar">🤖</div>
+                <div class="bubble">Hello! 🌟 I'm your AI assistant. How can I help you today? 🤖</div>
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <form class="chat-form" id="chatForm">
+                <input type="text" id="userInput" placeholder="Type your message here... ✍️" required autocomplete="off">
+                <button type="submit" class="send-btn" title="Send">🚀</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Highlight.js for Syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <script>
+        // Switch from landing page to chat interface
+        function startChat() {
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('mainChat').style.display = 'flex';
+        }
+
+        let chatHistory = [
+            {"role": "system", "content": "You are a helpful assistant. Use markdown for code and formatting."}
+        ];
+
+        const form = document.getElementById('chatForm');
+        const input = document.getElementById('userInput');
+        const chatBox = document.getElementById('chatBox');
+
+        marked.setOptions({
+            highlight: function(code, lang) {
+                const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+                return hljs.highlight(code, { language }).value;
+            }
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            
+            const text = input.value.trim();
+            if (!text) return;
+
+            appendMessage('user', text, '👤');
+            
+            chatHistory.push({"role": "user", "content": text});
+            input.value = ''; 
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ messages: chatHistory })
+                });
+                
+                const data = await response.json();
+                const reply = data.reply;
+                
+                chatHistory.push({"role": "assistant", "content": reply});
+                
+                const htmlReply = marked.parse(reply);
+                appendMessage('ai', htmlReply, '🤖', true);
+                
+            } catch (error) {
+                appendMessage('ai', 'Oops! Something went wrong communicating with the server. 🥺', '🤖');
+            }
+        });
+
+        function appendMessage(role, content, avatarEmoji, isHTML = false) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${role}`;
+            
+            const bubbleContent = isHTML ? content : content.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            
+            msgDiv.innerHTML = `
+                <div class="avatar">${avatarEmoji}</div>
+                <div class="bubble">${bubbleContent}</div>
+            `;
+            chatBox.appendChild(msgDiv);
+            
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
