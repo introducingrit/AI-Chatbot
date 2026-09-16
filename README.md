@@ -37,7 +37,7 @@ Version-1 (without database)
 <img width="1062" height="892" alt="Screenshot 2026-09-16 230606" src="https://github.com/user-attachments/assets/7efcd9c0-8b20-4e1b-a7a2-9c5b68f3a1d2" />
 
 
-Emphasis & Readability – Demonstrates the AI strictly following formatting constraints to emphasize key takeaways and maintain a clean, scannable layout.
+**Emphasis & Readability –** Demonstrates the AI strictly following formatting constraints to emphasize key takeaways and maintain a clean, scannable layout.
 
 
 <img width="1061" height="886" alt="Screenshot 2026-09-16 230621" src="https://github.com/user-attachments/assets/5d803ab2-3cbc-4811-8982-e27e81ebac12" />
