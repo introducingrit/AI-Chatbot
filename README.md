@@ -13,6 +13,12 @@ Chat Interface & Basic Q&A – Displays the distinct message bubbles for the use
 <img width="1091" height="893" alt="Screenshot 2026-09-16 230339" src="https://github.com/user-attachments/assets/ee74a938-0239-4bff-aed1-72a7db47e265" />
 
 
+Conversational Memory & Context Awareness – Demonstrates the chatbot's ability to maintain context from the chat history, allowing it to seamlessly understand and accurately answer follow-up questions (e.g., "describe the place") based on previous interactions.
+
+
+<img width="1060" height="875" alt="image" src="https://github.com/user-attachments/assets/581262f7-b0a5-4f33-a58e-048fbe46b7e8" />
+
+
 Hierarchical Data Presentation – Illustrates the capability to break down broad topics into categorized, easily digestible highlights using advanced markdown structures.
 
 
